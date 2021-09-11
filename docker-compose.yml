@@ -1,0 +1,33 @@
+version: '3'
+
+services: 
+  supermarket_db:
+    restart: always
+    image: mysql:5.7
+    container_name: supermarket_db
+    environment: 
+      MYSQL_ROOT_PASSWORD: 123
+      MYSQL_DATABASE: supermarket_db
+      MYSQL_USER: supermarket
+      MYSQL_PASSWORD: 2021
+    ports:
+      - 3307:3306
+    volumes:
+      - ./supermarket_db:/var/lib/mysql
+  supermarket_ms:
+    restart: always
+    container_name: supermarket_ms
+    ports:
+      - 4000:4000
+    build: ./supermarket_ms
+    environment: 
+      DB_HOST: supermarket_db
+      DB_PORT: 3306
+      DB_USER: supermarket
+      DB_PASSWORD: 2021
+      DB_NAME: supermarket_db
+      URL: 0.0.0.0:4000
+    depends_on: 
+      - supermarket_db
+    links: 
+      - supermarket_db
